@@ -33,6 +33,9 @@
 #include <limits.h>         /* PATH_MAX */
 #include <dirent.h>         /* opendir, readdir */
 #include <ctype.h>          /* isalpha */
+#ifndef WIN32
+#include <paths.h>
+#endif
 
 /* misc win32 helpers */
 #ifdef WIN32
@@ -429,8 +432,9 @@ static dvd_reader_t *DVDOpenCommon( const char *ppath,
     if( !(path_copy = strdup( path ) ) )
       goto DVDOpen_error;
 
-#ifndef WIN32 /* don't have fchdir, and getcwd( NULL, ... ) is strange */
+#if !defined(WIN32) && !defined(_XBMC) /* don't have fchdir, and getcwd( NULL, ... ) is strange */
               /* Also WIN32 does not have symlinks, so we don't need this bit of code. */
+              /* XBMC also doesn't need symlink resolution */
 
     /* Resolve any symlinks and get the absolute dir name. */
     {
@@ -688,6 +692,16 @@ static dvd_file_t *DVDOpenFileUDF( dvd_reader_t *dvd, const char *filename,
  */
 static int findDirFile( const char *path, const char *file, char *filename )
 {
+#if defined(_XBMC)
+  struct stat fileinfo;
+
+	// no emulated opendir function in xbmc, so we'll
+	// check if the file exists by stat'ing it ...
+  sprintf(filename, "%s%s%s", path, ((path[strlen(path) - 1] == '/') ? "" : "/"), file);
+
+  if (stat(filename, &fileinfo) == 0) return 0;
+
+#else
   DIR *dir;
   struct dirent *ent;
 
@@ -704,6 +718,7 @@ static int findDirFile( const char *path, const char *file, char *filename )
     }
   }
   closedir(dir);
+#endif // _XBMC
   return -1;
 }
 
