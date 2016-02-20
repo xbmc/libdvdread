@@ -344,7 +344,10 @@ static dvd_reader_t *DVDOpenCommon( const char *ppath,
                                     dvd_reader_stream_cb *stream_cb )
 {
   struct stat fileinfo;
-  int ret, have_css, retval, cdir = -1;
+  int ret, have_css, cdir = -1;
+#if !defined(WIN32) && !defined(_XBMC)
+  int retval = -1;
+#endif
   dvd_reader_t *ret_val = NULL;
   char *dev_name = NULL;
   char *path = NULL, *new_path = NULL, *path_copy = NULL;
