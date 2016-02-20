@@ -815,6 +815,16 @@ static dvd_file_t *DVDOpenFileUDF( dvd_reader_t *ctx, const char *filename,
  */
 static int findDirFile( const char *path, const char *file, char *filename )
 {
+#if defined(_XBMC)
+  struct stat fileinfo;
+
+	// no emulated opendir function in xbmc, so we'll
+	// check if the file exists by stat'ing it ...
+  sprintf(filename, "%s%s%s", path, ((path[strlen(path) - 1] == '/') ? "" : "/"), file);
+
+  if (stat(filename, &fileinfo) == 0) return 0;
+
+#else
   DIR *dir;
   struct dirent *ent;
 
@@ -831,6 +841,7 @@ static int findDirFile( const char *path, const char *file, char *filename )
     }
   }
   closedir(dir);
+#endif // _XBMC
   return -1;
 }
 
