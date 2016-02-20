@@ -33,6 +33,9 @@
 #include <limits.h>         /* PATH_MAX */
 #include <dirent.h>         /* opendir, readdir */
 #include <ctype.h>          /* isalpha */
+#ifndef WIN32
+#include <paths.h>
+#endif
 
 /* misc win32 helpers */
 #ifdef WIN32
