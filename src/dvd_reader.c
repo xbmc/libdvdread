@@ -344,7 +344,10 @@ static dvd_reader_t *DVDOpenCommon( const char *ppath,
                                     dvd_reader_stream_cb *stream_cb )
 {
   struct stat fileinfo;
-  int ret, have_css, retval, cdir = -1;
+  int ret, have_css, cdir = -1;
+#if !defined(WIN32) && !defined(_XBMC)
+  int retval = -1;
+#endif
   dvd_reader_t *ret_val = NULL;
   char *dev_name = NULL;
   char *path = NULL, *new_path = NULL, *path_copy = NULL;
@@ -432,8 +435,9 @@ static dvd_reader_t *DVDOpenCommon( const char *ppath,
     if( !(path_copy = strdup( path ) ) )
       goto DVDOpen_error;
 
-#ifndef WIN32 /* don't have fchdir, and getcwd( NULL, ... ) is strange */
+#if !defined(WIN32) && !defined(_XBMC) /* don't have fchdir, and getcwd( NULL, ... ) is strange */
               /* Also WIN32 does not have symlinks, so we don't need this bit of code. */
+              /* XBMC also doesn't need symlink resolution */
 
     /* Resolve any symlinks and get the absolute dir name. */
     {
