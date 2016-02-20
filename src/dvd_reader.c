@@ -33,6 +33,9 @@
 #include <limits.h>         /* PATH_MAX */
 #include <dirent.h>         /* opendir, readdir */
 #include <ctype.h>          /* isalpha */
+#ifndef WIN32
+#include <paths.h>
+#endif
 
 #if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__bsdi__) || defined(__APPLE__)
 # define SYS_BSD 1
