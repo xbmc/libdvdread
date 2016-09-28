@@ -6,7 +6,7 @@ m4_define([dvdread_version],[dvdread_major.dvdread_minor.dvdread_micro])
 
 AC_INIT(libdvdread, dvdread_version)
 
-AC_CONFIG_SRCDIR([$(top_builddir)/src/dvd_reader.c])
+AC_CONFIG_SRCDIR([$(abs_top_builddir)/src/dvd_reader.c])
 
 AC_PREREQ(2.53)
 AC_CANONICAL_HOST
