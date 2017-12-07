@@ -142,7 +142,7 @@ struct timespec {
 /*
  * note: ETIMEDOUT is correctly defined in winsock.h
  */
-#include <winsock.h>
+#include <winsock2.h>
 
 #ifdef NEED_ERRNO
 #  include "need_errno.h"
