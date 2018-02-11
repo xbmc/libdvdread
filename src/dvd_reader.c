@@ -31,7 +31,9 @@
 #include <string.h>         /* memcpy, strlen */
 #include <unistd.h>         /* chdir, getcwd */
 #include <limits.h>         /* PATH_MAX */
+#if HAVE_DIRENT_H
 #include <dirent.h>         /* opendir, readdir */
+#endif
 #include <ctype.h>          /* isalpha */
 #ifndef WIN32
 #include <paths.h>
@@ -183,6 +185,9 @@ static void win32_closedir(win32_dir_t *dir)
 #define readdir   win32_readdir
 #define closedir  win32_closedir
 
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
+#define getenv(x) NULL
+#endif
 #endif /* _WIN32 */
 
 #define DEFAULT_UDF_CACHE_LEVEL 1
