@@ -31,7 +31,9 @@
 #include <string.h>         /* memcpy, strlen */
 #include <unistd.h>         /* chdir, getcwd */
 #include <limits.h>         /* PATH_MAX */
+#if HAVE_DIRENT_H
 #include <dirent.h>         /* opendir, readdir */
+#endif
 #include <ctype.h>          /* isalpha */
 #ifndef WIN32
 #include <paths.h>
@@ -41,7 +43,7 @@
 #ifdef WIN32
 # ifndef HAVE_GETTIMEOFDAY
    /* replacement gettimeofday implementation */
-#  include <sys/timeb.h>
+# include <sys/timeb.h>
 static inline int _private_gettimeofday( struct timeval *tv, void *tz )
 {
   struct timeb t;
@@ -51,9 +53,12 @@ static inline int _private_gettimeofday( struct timeval *tv, void *tz )
   return 0;
 }
 #  define gettimeofday(TV, TZ) _private_gettimeofday((TV), (TZ))
-# endif
+#endif
 # include <io.h> /* read() */
 # define lseek64 _lseeki64
+#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
+#define getenv(x) NULL
+#endif
 #endif
 
 #if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__bsdi__) || defined(__APPLE__)
