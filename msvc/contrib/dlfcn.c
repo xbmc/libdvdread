@@ -46,7 +46,9 @@ void *dlopen(const char *module_name, int mode)
     SetErrorMode(em);
     SetLastError(0); // clear the last error
 #else
-    dsoh = LoadPackagedLibrary(path, 0);
+    wchar_t pathW[MAX_PATH];
+    mbstowcs(pathW, path, MAX_PATH);
+    dsoh = LoadPackagedLibrary(pathW, 0);
 #endif
     return (void *)dsoh;
 }
