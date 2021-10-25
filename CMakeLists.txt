@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 
-set(DVDREAD_VERSION_MAJOR 5)
-set(DVDREAD_VERSION_MINOR 90)
-set(DVDREAD_VERSION_MICRO 0)
+set(DVDREAD_VERSION_MAJOR 6)
+set(DVDREAD_VERSION_MINOR 1)
+set(DVDREAD_VERSION_MICRO 2)
 set(DVDREAD_VERSION "${DVDREAD_VERSION_MAJOR}.${DVDREAD_VERSION_MINOR}.${DVDREAD_VERSION_MICRO}")
 set(PACKAGE_VERSION ${DVDREAD_VERSION})
 
@@ -81,6 +81,8 @@ add_library(${PROJECT_NAME}
   src/dvdread_internal.h
   src/ifo_print.c
   src/ifo_read.c
+  src/logger.c
+  src/logger.h
   src/md5.c
   src/md5.h
   src/nav_print.c
