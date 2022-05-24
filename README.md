@@ -1,6 +1,10 @@
 # Goals and features
 
-**libdvdread** is a library for simpler navigation (DVDs without menus)
+**libdvdread** is a library for simple navigation of DVD (DVDs without menus).
+
+Written in C, cross-platform, it gives low-level access to DVD structures.
+
+It works well in conjunction with ***libdvdread*** *(menus)* and ***libdvdcss*** *(cipher)*.
 
 ## Where does it come from?
 
@@ -18,7 +22,9 @@ libdvdnav and libdvdread were merged, and then split again.
 
 ## Where is it now?
 
-Libdvdread is hosted [here](https://code.videolan.org/videolan/libdvdread)
+Libdvdread is hosted [here](https://code.videolan.org/videolan/libdvdread).
+
+Libdvdnav is hosted [here](https://code.videolan.org/videolan/libdvdnav).
 
 You can find more information [here](https://www.videolan.org/developers/libdvdnav.html)
 
@@ -27,7 +33,7 @@ Please report bugs to the developers mailinglist at
 
 ## License
 
-**Libdvdread** is completely licensed under GPL. You may use it at wish within the
+**Libdvdread** is completely licensed under GPLv2/v3. You may use it at wish within the
 bounds of this license. See the file [COPYING](https://code.videolan.org/videolan/libdvdread/-/blob/master/COPYING) for a copy of the GPL.
 
 ## Using libdvdread
@@ -35,6 +41,15 @@ bounds of this license. See the file [COPYING](https://code.videolan.org/videola
 A detailed description of DVD structures is available [here](http://www.mpucoder.com/dvd/)
 
 All documentation is also accessible [here](http://dvdnav.mplayerhq.hu/#docs)
+
+## Deciphering disks
+
+**Libdvdread** does not do any decryption of the CSS algorithm. This task can be delegated to **libdvdcss**.
+
+Install *libdvdcss* from source or from your distribution (*libdvd-pkg*) to play full DVDs,
+if your country allows this to work legally.
+
+Note that *libdvdnav* is useful for interactive DVD menus.
 
 ## CoC
 
