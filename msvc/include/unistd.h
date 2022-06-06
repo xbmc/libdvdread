@@ -29,6 +29,8 @@
 #include <malloc.h>
 #include <errno.h>
 #include <direct.h>
+#include <io.h>
+
 
 #include <config.h>
 
