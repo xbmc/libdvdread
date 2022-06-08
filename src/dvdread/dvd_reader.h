@@ -324,7 +324,7 @@ int DVDFileSeekForce( dvd_file_t *, int offset, int force_size);
 /**
  * Get the ISO9660 VolumeIdentifier and VolumeSetIdentifier
  *
- * * Only use this function as fallback if DVDUDFVolumeInfo returns 0   *
+ * * Only use this function as fallback if DVDUDFVolumeInfo returns -1  *
  * * this will happen on a disc mastered only with a iso9660 filesystem *
  * * All video DVD discs have UDF filesystem                            *
  *
