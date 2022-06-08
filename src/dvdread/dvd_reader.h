@@ -37,7 +37,7 @@
 /**
  * The DVD access interface.
  *
- * This file contains the functions that form the interface to to
+ * This file contains the functions that form the interface for
  * reading files located on a DVD.
  */
 
