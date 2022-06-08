@@ -4,7 +4,7 @@
 
 Written in C, cross-platform, it gives low-level access to DVD structures.
 
-It works well in conjunction with ***libdvdread*** *(menus)* and ***libdvdcss*** *(cipher)*.
+It works well in conjunction with ***libdvdnav*** *(menus)* and ***libdvdcss*** *(cipher)*.
 
 ## Where does it come from?
 
