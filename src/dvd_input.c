@@ -51,7 +51,7 @@ int         (*dvdinput_read)  (dvd_input_t, void *, int, int);
 # include <dvdcss/dvdcss.h>
 # define DVDcss_open_stream(a, b) \
     dvdcss_open_stream((void*)(a), (dvdcss_stream_cb*)(b))
-# define DVDcss_open(a) dvdcss_open((char*)(a))
+# define DVDcss_open(a,b,c) dvdcss_open((char*)(a), (void*)(b), (dvdcss_stream_cb*)(c))
 # define DVDcss_close   dvdcss_close
 # define DVDcss_seek    dvdcss_seek
 # define DVDcss_read    dvdcss_read
@@ -70,7 +70,7 @@ int         (*dvdinput_read)  (dvd_input_t, void *, int, int);
 typedef struct dvdcss_s *dvdcss_t;
 typedef struct dvdcss_stream_cb dvdcss_stream_cb;
 static dvdcss_t (*DVDcss_open_stream) (void *, dvdcss_stream_cb *);
-static dvdcss_t (*DVDcss_open)  (const char *);
+static dvdcss_t (*DVDcss_open)  (const char *, void *, dvdcss_stream_cb *);
 static int      (*DVDcss_close) (dvdcss_t);
 static int      (*DVDcss_seek)  (dvdcss_t, int, int);
 static int      (*DVDcss_read)  (dvdcss_t, void *, int, int);
@@ -135,7 +135,7 @@ static dvd_input_t css_open(void *priv, dvd_logger_cb *logcb,
 
   /* Really open it with libdvdcss */
   if(target)
-      dev->dvdcss = DVDcss_open(target);
+      dev->dvdcss = DVDcss_open(target, priv, (dvdcss_stream_cb *)stream_cb);
   else if(priv && stream_cb) {
 #ifdef HAVE_DVDCSS_DVDCSS_H
       dev->dvdcss = DVDcss_open_stream(priv, (dvdcss_stream_cb *)stream_cb);
@@ -361,7 +361,7 @@ int dvdinput_setup(void *priv, dvd_logger_cb *logcb)
 #endif
     DVDcss_open_stream = (dvdcss_t (*)(void *, dvdcss_stream_cb *))
       dlsym(dvdcss_library, U_S "dvdcss_open_stream");
-    DVDcss_open = (dvdcss_t (*)(const char*))
+    DVDcss_open = (dvdcss_t (*)(const char*, void *, dvdcss_stream_cb *))
       dlsym(dvdcss_library, U_S "dvdcss_open");
     DVDcss_close = (int (*)(dvdcss_t))
       dlsym(dvdcss_library, U_S "dvdcss_close");

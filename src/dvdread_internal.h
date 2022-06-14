@@ -28,6 +28,7 @@
 #endif /* _WIN32 */
 
 #include "dvdread/dvd_reader.h"
+#include "dvdread/dvd_filesystem.h"
 #include "dvdread/ifo_types.h"
 #include "logger.h"
 
@@ -39,6 +40,8 @@ struct dvd_reader_s
     dvd_reader_device_t *rd;
     void *priv; /* User provided context */
     dvd_logger_cb logcb;
+    dvd_reader_dir_cb dir_cb;
+    dvd_reader_stream_cb* stream_cb;
     /* Set 100 flags for BUP fallback, most signifiant left
        [0] for upper remaining VTS, [1] for the first Main + 63 VTS */
     uint64_t ifoBUPflags[2];

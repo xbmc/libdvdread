@@ -34,6 +34,14 @@ libdvdread_la_SOURCES = \
 	src/nav_read.c \
 	msvc/contrib/win32_cs.h
 
+if HAVE_WIN32
+libdvdread_la_SOURCES+= \
+	src/dir_posix.c
+else
+libdvdread_la_SOURCES+= \
+	src/dir_posix.c
+endif
+
 libdvdread_la_LIBADD = $(CSS_LIBS)
 
 libdvdread_la_LDFLAGS = -version-info $(DVDREAD_LTVERSION) \
@@ -50,6 +58,7 @@ pkginclude_HEADERS = \
 	src/dvdread/nav_print.h \
 	src/dvdread/nav_read.h \
 	src/dvdread/nav_types.h \
+	src/dvdread/dvd_filesystem.h \
 	src/dvdread/version.h
 
 pkgconfigdir = $(libdir)/pkgconfig

@@ -16,6 +16,7 @@ xcopy /Y ..\src\dvdread\nav_print.h install\include\dvdnav
 xcopy /Y ..\src\dvdread\ifo_print.h install\include\dvdnav
 xcopy /Y ..\src\dvdread\ifo_types.h install\include\dvdnav
 xcopy /Y ..\src\dvdread\nav_types.h install\include\dvdnav
+xcopy /Y ..\src\dvdread\dvd_filesystem.h install\include\dvdnav
 
 ECHO lib ...
 xcopy /Y %1\libdvdnav\libdvdnav.lib install\lib

@@ -46,6 +46,8 @@
  */
 #include "version.h"
 
+#include "dvd_filesystem.h"
+
 /**
  * The length of one Logical Block of a DVD.
  */
@@ -153,6 +155,7 @@ dvd_reader_t *DVDOpenStream( void *, dvd_reader_stream_cb * );
  */
 dvd_reader_t *DVDOpen2( void *, const dvd_logger_cb *, const char * );
 dvd_reader_t *DVDOpenStream2( void *, const dvd_logger_cb *, dvd_reader_stream_cb * );
+dvd_reader_t *DVDOpenFiles( void *, const dvd_logger_cb *, const char *, dvd_reader_stream_cb *, dvd_reader_dir_cb *);
 
 /**
  * Closes and cleans up the DVD reader object.

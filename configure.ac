@@ -77,6 +77,9 @@ AC_ARG_ENABLE([dlfcn],
   [use_builtin_dlfcn=$enableval],
   [use_builtin_dlfcn=no])
 
+# for filesystem/dir access
+AC_CHECK_HEADERS([dirent.h])
+
 AS_IF([test x"$with_libdvdcss" = "xyes"], [
   CSS_REQUIRES="libdvdcss >= 1.2"
   PKG_CHECK_MODULES([CSS], [$CSS_REQUIRES])
@@ -108,6 +111,7 @@ AS_IF([test "x$DOXYGEN" = "x"], [
   ])
 ])
 AM_CONDITIONAL([APIDOC], [test "x$DOXYGEN" != "x" && test "x$enable_apidoc" = "xyes"])
+AM_CONDITIONAL(HAVE_WIN32, test "${SYS}" = "mingw32" || test "${SYS}" = "cygwin" )
 
 AS_IF([test "x$ac_cv_c_compiler_gnu" = "xyes"], [
   AC_DEFINE([UNUSED], [__attribute__((unused))], [Unused parameter annotation])
