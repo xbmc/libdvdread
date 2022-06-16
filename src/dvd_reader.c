@@ -1088,11 +1088,11 @@ dvd_file_t *DVDOpenFile( dvd_reader_t *ctx, int titlenum,
     return NULL;
   }
 
-  //if( dvd->isImageFile ) {
-  //  return DVDOpenFileUDF( ctx, filename, do_cache );
-  //} else {
+  if( dvd->isImageFile ) {
+    return DVDOpenFileUDF( ctx, filename, do_cache );
+  } else {
     return DVDOpenFilePath( ctx, filename );
-  //}
+  }
 }
 
 void DVDCloseFile( dvd_file_t *dvd_file )
