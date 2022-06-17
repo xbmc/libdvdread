@@ -125,6 +125,9 @@ static dvd_input_t css_open(void *priv, dvd_logger_cb *logcb,
 {
   dvd_input_t dev;
 
+  DVDReadLog(priv, logcb, DVD_LOGGER_LEVEL_DEBUG,
+               "css_open called %s", target);
+
   /* Allocate the handle structure */
   dev = dvd_input_New(priv, logcb);
   if(dev == NULL) {
@@ -202,6 +205,9 @@ static dvd_input_t file_open(void *priv, dvd_logger_cb *logcb,
                              dvd_reader_stream_cb *stream_cb UNUSED)
 {
   dvd_input_t dev;
+
+  DVDReadLog(priv, logcb, DVD_LOGGER_LEVEL_DEBUG,
+               "File_open called %s", target);
 
   if(target == NULL)
     return NULL;
