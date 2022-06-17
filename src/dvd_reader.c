@@ -31,7 +31,6 @@
 #include <string.h>         /* memcpy, strlen */
 #include <unistd.h>         /* pclose */
 #include <limits.h>         /* PATH_MAX */
-#include <dirent.h>         /* opendir, readdir */
 #include <ctype.h>          /* isalpha */
 
 #if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__bsdi__) || defined(__APPLE__)
@@ -62,6 +61,8 @@
 # include <windows.h>
 # include "msvc/contrib/win32_cs.h"
 #endif
+
+dvd_reader_dir_cb dir_open_default(void);
 
 /* misc win32 helpers */
 
@@ -438,7 +439,8 @@ static char *bsd_block2char( const char *path )
 static dvd_reader_t *DVDOpenCommon( void *priv,
                                     const dvd_logger_cb *logcb,
                                     const char *ppath,
-                                    dvd_reader_stream_cb *stream_cb )
+                                    dvd_reader_stream_cb *stream_cb,
+                                    dvd_reader_dir_cb *dir_cb )
 {
   dvdstat_t fileinfo;
   int ret, have_css, cdir = -1;
@@ -451,6 +453,11 @@ static dvd_reader_t *DVDOpenCommon( void *priv,
   ctx->priv = priv;
   if(logcb)
     ctx->logcb = *logcb;
+
+  if(dir_cb)
+    ctx->dir_cb = *dir_cb;
+  else
+    ctx->dir_cb = dir_open_default();
 
 #if defined(_WIN32) || defined(__OS2__)
       int len;
@@ -730,25 +737,31 @@ DVDOpen_error:
 
 dvd_reader_t *DVDOpen( const char *ppath )
 {
-    return DVDOpenCommon( NULL, NULL, ppath, NULL );
+    return DVDOpenCommon( NULL, NULL, ppath, NULL, NULL );
 }
 
 dvd_reader_t *DVDOpenStream( void *stream,
                              dvd_reader_stream_cb *stream_cb )
 {
-    return DVDOpenCommon( stream, NULL, NULL, stream_cb );
+    return DVDOpenCommon( stream, NULL, NULL, stream_cb, NULL );
 }
 
 dvd_reader_t *DVDOpen2( void *priv, const dvd_logger_cb *logcb,
                         const char *ppath )
 {
-    return DVDOpenCommon( priv, logcb, ppath, NULL );
+    return DVDOpenCommon( priv, logcb, ppath, NULL, NULL );
+}
+
+dvd_reader_t *DVDOpenFiles( void *priv, const dvd_logger_cb *logcb,
+                        const char *ppath, dvd_reader_dir_cb *dir_cb )
+{
+    return DVDOpenCommon( priv, logcb, ppath, NULL, dir_cb );
 }
 
 dvd_reader_t *DVDOpenStream2( void *priv, const dvd_logger_cb *logcb,
                               dvd_reader_stream_cb *stream_cb )
 {
-    return DVDOpenCommon( priv, logcb, NULL, stream_cb );
+    return DVDOpenCommon( priv, logcb, NULL, stream_cb, NULL );
 }
 
 void DVDClose( dvd_reader_t *dvd )
@@ -813,24 +826,24 @@ static dvd_file_t *DVDOpenFileUDF( dvd_reader_t *ctx, const char *filename,
  *     or -1 on file not found.
  *     or -2 on path not found.
  */
-static int findDirFile( const char *path, const char *file, char *filename )
+static int findDirFile(dvd_reader_t *dvd, const char *path, const char *file, char *filename )
 {
-  DIR *dir;
-  struct dirent *ent;
+  DVD_DIRENT entry;
 
-  dir = opendir( path );
+
+  DVD_DIR_H * dir = dvd->dir_cb(path);
   if( !dir ) return -2;
 
-  while( ( ent = readdir( dir ) ) != NULL ) {
-    if( !strcasecmp( ent->d_name, file ) ) {
+  while(!dir->read(dir, &entry)) {
+    if( !strcasecmp( entry.d_name, file ) ) {
       sprintf( filename, "%s%s%s", path,
                ( ( path[ strlen( path ) - 1 ] == '/' ) ? "" : "/" ),
-               ent->d_name );
-      closedir(dir);
+               entry.d_name );
+      dir->close(dir);
       return 0;
     }
   }
-  closedir(dir);
+  dir->close(dir);
   return -1;
 }
 
@@ -846,17 +859,17 @@ static int findDVDFile( dvd_reader_t *dvd, const char *file, char *filename )
     nodirfile = file;
   }
 
-  ret = findDirFile( dvd->rd->path_root, nodirfile, filename );
+  ret = findDirFile(dvd, dvd->rd->path_root, nodirfile, filename );
   if( ret < 0 ) {
     char video_path[ PATH_MAX + 1 ];
 
     /* Try also with adding the path, just in case. */
     sprintf( video_path, "%s/VIDEO_TS/", dvd->rd->path_root );
-    ret = findDirFile( video_path, nodirfile, filename );
+    ret = findDirFile(dvd, video_path, nodirfile, filename );
     if( ret < 0 ) {
       /* Try with the path, but in lower case. */
       sprintf( video_path, "%s/video_ts/", dvd->rd->path_root );
-      ret = findDirFile( video_path, nodirfile, filename );
+      ret = findDirFile(dvd, video_path, nodirfile, filename );
       if( ret < 0 ) {
         return 0;
       }
